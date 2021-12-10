@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8" />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+      integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+      crossorigin="anonymous"
+    />
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link
+      href="{{ url_for('static', filename='css/template.css') }}"
+      rel="stylesheet"
+    />
+    <title>Prediction</title>
+  </head>
+
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <a class="navbar-brand" href="#">HEARTBEAT</a>
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-toggle="collapse"
+        data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="#"
+              >Hospitals <span class="sr-only">(current)</span></a
+            >
+          </li>
+          <li class="nav-item dropdown">
+            <a
+              class="nav-link dropdown-toggle"
+              href="#"
+              id="navbarDropdown"
+              role="button"
+              data-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
+              Payment Method
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="dropdown-item" href="#">Action</a>
+              <a class="dropdown-item" href="#">Another action</a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="#">Something else here</a>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </nav>
+    <br />
+
+    <div style="text-align: center">
+      <h1>Hi {{session.Name}} !!</h1>
+      <br />
+      <h2>Upload the chemical smeared image of blood sample</h2>
+    </div>
+    <form
+      action="{{ url_for('predict') }}"
+      method="post"
+      enctype="multipart/form-data"
+    >
+      <div class="form-group">
+        <label for="exampleInputage">Age</label>
+        <input
+          type="number"
+          class="form-control"
+          id="exampleInputage"
+          name="Age"
+          aria-describedby="AgeHelp"
+          placeholder="Enter your Age"
+        />
+      </div>
+      <div class="form-group">
+        <label for="exampleInputfever">Temperature(in Fahrenheit)</label>
+        <input
+          type="number"
+          class="form-control"
+          id="exampleInputCholestrol"
+          name="Temperature"
+          placeholder="Enter your Temperature level"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="exampleInputimage">Upload</label>
+        <input
+          type="file"
+          class="form-control"
+          id="exampleInputHR"
+          name="file"
+          placeholder="image"
+          required
+          style="height: 45px"
+        />
+      </div>
+
+      <button type="submit" class="btn btn-primary">Predict</button>
+    </form>
+
+    <div style="text-align: center">
+      <div class="msg">
+        <h2>{{ msg }}</h2>
+      </div>
+
+      {% if infected %}
+      <main>
+        <h3>Cell Status</h3>
+        <section>
+          <div class="pieID pie"></div>
+          <ul class="pieID legend">
+            <li>
+              <em>Infected</em>
+              <span>{{infected}}</span>
+            </li>
+            <li>
+              <em>Uninfected</em>
+              <span>{{uninfected}}</span>
+            </li>
+          </ul>
+        </section>
+      </main>
+      {% endif %}
+
+      <a href="{{ url_for('logout') }}" class="btn">Logout</a>
+    </div>
+  </body>
+
+  <script>
+    function sliceSize(dataNum, dataTotal) {
+      return (dataNum / dataTotal) * 360;
+    }
+    function addSlice(sliceSize, pieElement, offset, sliceID, color) {
+      $(pieElement).append(
+        "<div class='slice " + sliceID + "'><span></span></div>"
+      );
+      var offset = offset - 1;
+      var sizeRotation = -179 + sliceSize;
+      $("." + sliceID).css({
+        transform: "rotate(" + offset + "deg) translate3d(0,0,0)",
+      });
+      $("." + sliceID + " span").css({
+        transform: "rotate(" + sizeRotation + "deg) translate3d(0,0,0)",
+        "background-color": color,
+      });
+    }
+    function iterateSlices(
+      sliceSize,
+      pieElement,
+      offset,
+      dataCount,
+      sliceCount,
+      color
+    ) {
+      var sliceID = "s" + dataCount + "-" + sliceCount;
+      var maxSize = 179;
+      if (sliceSize <= maxSize) {
+        addSlice(sliceSize, pieElement, offset, sliceID, color);
+      } else {
+        addSlice(maxSize, pieElement, offset, sliceID, color);
+        iterateSlices(
+          sliceSize - maxSize,
+          pieElement,
+          offset + maxSize,
+          dataCount,
+          sliceCount + 1,
+          color
+        );
+      }
+    }
+
+    function createPie(dataElement, pieElement) {
+      var listData = [];
+      $(dataElement + " span").each(function () {
+        listData.push(Number($(this).html()));
+      });
+      var listTotal = 0;
+      for (var i = 0; i < listData.length; i++) {
+        listTotal += listData[i];
+      }
+      var offset = 0;
+      var color = [
+        "cornflowerblue",
+        "olivedrab",
+        "orange",
+        "tomato",
+        "crimson",
+        "purple",
+        "turquoise",
+        "forestgreen",
+        "navy",
+        "gray",
+      ];
+      for (var i = 0; i < listData.length; i++) {
+        var size = sliceSize(listData[i], listTotal);
+        iterateSlices(size, pieElement, offset, i, 0, color[i]);
+        $(dataElement + " li:nth-child(" + (i + 1) + ")").css(
+          "border-color",
+          color[i]
+        );
+        offset += size;
+      }
+    }
+    createPie(".pieID.legend", ".pieID.pie");
+  </script>
+</html>

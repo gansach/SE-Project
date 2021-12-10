@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+    integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <link href="{{ url_for('static', filename='css/template.css') }}" rel="stylesheet">
+  <title>Malaria Detection</title>
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="#">MALARIA</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item active">
+          <a class="nav-link" href="#">Hospitals <span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="false">
+            Payment Method
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="#">Action</a>
+            <a class="dropdown-item" href="#">Another action</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="#">Something else here</a>
+          </div>
+        </li>
+
+      </ul>
+    </div>
+  </nav>
+  <br>
+  <div style="text-align: center;">
+    <br>
+    <h1>Malaria Detection Using AI</h1>
+    <h2>Sign up for a Healthier Future</h2>
+  </div>
+  <br>
+  <div class="container">
+    <form action="{{ url_for('register') }}" method="post">
+      <div class="msg">{{msg}}</div>
+      <label for="exampleInputname">Full Name</label>
+      <input type="text" class="form-control" id="Name" name="Name" aria-describedby="nameHelp"
+        placeholder="Enter your full name" required>
+      <br>
+      <label for="exampleInputEmail1">Email address</label>
+      <input type="email" class="form-control" id="email" name="email" aria-describedby="emailHelp"
+        placeholder="abc@gmail.com" required>
+      <small id="emailHelp" class="form-text text-muted">Your e-mail id is confidential</small>
+      <br>
+      <label for="exampleInputPassword1">Password</label>
+      <input type="password" class="form-control" id="password" name="password" placeholder="Enter a secure password"
+        required>
+      <br>
+      <label for="exampleInputaddress">Local Address</label>
+      <input type="text" class="form-control" id="Address" name="Address" aria-describedby="emailHelp"
+        placeholder="Enter your residential address" required>
+      <br>
+      <br>
+      <button type="submit" class="btn btn-primary">Sign up</button>
+  </div>
+
+  </form>
+
+</body>
+
+</html>
